@@ -1,4 +1,5 @@
 module{
+
     public type Member = {
         name: Text;
         birthdate: Nat; //DDMMAAA
@@ -10,4 +11,6 @@ module{
         #Female;
         #NonBinary;   
     };
+
+    
 }
