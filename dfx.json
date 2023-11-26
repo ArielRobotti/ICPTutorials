@@ -1,0 +1,29 @@
+{
+  "canisters": {
+    "ICPTutorials_backend": {
+      "main": "src/ICPTutorials_backend/main.mo",
+      "type": "motoko"
+    },
+    "ICPTutorials_frontend": {
+      "dependencies": [
+        "ICPTutorials_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/ICPTutorials_frontend/src/index.html"
+      },
+      "source": [
+        "src/ICPTutorials_frontend/assets",
+        "dist/ICPTutorials_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
