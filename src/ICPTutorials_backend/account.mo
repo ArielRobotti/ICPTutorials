@@ -4,6 +4,7 @@ import Array "mo:base/Array";
 import Hash "mo:base/Hash";
 import Principal "mo:base/Principal";
 import Iter "mo:base/Iter";
+import Buffer "mo:base/Buffer";
 module{
     
     public type SubAccount = Blob;
@@ -39,4 +40,11 @@ module{
         };
         true;       
     };
+    public func getAccountsFromPrincipal(ledger: [Account],p: Principal): [Account]{
+        let tempBuffer = Buffer.fromArray<Account>([]);
+        for(i in ledger.vals()){
+            if(i.owner == p){tempBuffer.add(i)};
+        };
+        tempBuffer.toArray();
+    }
 };

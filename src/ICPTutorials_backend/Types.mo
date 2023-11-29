@@ -1,3 +1,4 @@
+import Nat32 "mo:base/Nat32";
 module{
 
     public type Member = {
@@ -20,13 +21,20 @@ module{
 
     public type Tutorial = {
         title: Text;  //Limitar a 100 caracteres
-        autorPrincipal: Principal;
-        date: Int; //Timestamp
         tags: [Text];
         html: Text; //Se genera automaticamente desde el front
         assets: [Blob];
         //La hoja de estilos es comun para todos los tutoriales    
     };
+
+    public type Publication = {
+        autorPrincipal: Principal;
+        date: Int; //Timestamp
+        content: Tutorial;
+    };
+    public func hashNat(a : Nat): Nat32 {
+        Nat32.fromNat(a);
+    }
 
 
 }
