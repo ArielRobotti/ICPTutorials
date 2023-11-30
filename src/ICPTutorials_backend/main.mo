@@ -30,7 +30,7 @@ actor ICPTutorials = {
   stable var currentTutorialId = 0;
   let ledger = HashMap.HashMap<Account, Nat>(1, Account.accountsEqual, Account.accountsHash);
   let userIds = HashMap.HashMap<Principal,UserId>(1, Principal.equal, Principal.hash);
-  let users = HashMap.HashMap<Nat,User>(1, Nat.equal, Nat32.fromNat);
+  let users = HashMap.HashMap<UserId,User>(1, Nat.equal, Nat32.fromNat);
   let blackList = HashMap.HashMap<Principal,()>(0, Principal.equal, Principal.hash);
   
   var incomingPublications = HashMap.HashMap<TutoId,Publication>(1, Types.tutoIdEqual, Types.tutoIdHash);
@@ -108,17 +108,17 @@ actor ICPTutorials = {
       case null{#err("Tutorial id does not exist")};
       case (_){#ok()};
     };    
-  }; 
-
-  public shared func getAprovedPublication(): async [Publication]{
-    return Iter.toArray(aprovedPublications.vals());
   };
-  
+
   public shared ({caller}) func getIncomingPublication(): async [Publication]{
     assert (caller != DAO);
     return Iter.toArray(aprovedPublications.vals());
   };
 
+  public shared func getAprovedPublication(): async [Publication]{
+    return Iter.toArray(aprovedPublications.vals());
+  };
+  
   public query func getPubFromUser(userId: Nat): async [Publication]{
     var pubs = Iter.toArray(aprovedPublications.vals());
     Array.filter<Publication>(pubs, func x: Bool {x.autor == userId});  

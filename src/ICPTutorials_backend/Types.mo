@@ -34,7 +34,7 @@ module{
     public func tutoIdEqual(a: TutoId, b: TutoId): Bool{ a == b };
 
     public type Publication = {
-        autorPrincipal: Principal;
+        autor: Nat;
         date: Int; //Timestamp
         content: Tutorial;
     };
