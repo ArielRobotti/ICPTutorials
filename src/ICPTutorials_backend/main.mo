@@ -1,19 +1,22 @@
 import Principal "mo:base/Principal";
-import Result "mo:base/Result";
+import Nat "mo:base/Nat";
+import Nat32 "mo:base/Nat32";
+import Array "mo:base/Array";
+import Time "mo:base/Time";
+import Buffer "mo:base/Buffer";
 import HashMap "mo:base/HashMap";
+import Result "mo:base/Result";
 import Types "Types";
 import Member "member";
 import Account "account";
-import Time "mo:base/Time";
-import Buffer "mo:base/Buffer";
-import Nat "mo:base/Nat";
+
 import Iter "mo:base/Iter";
-import Hash "mo:base/Hash";
+// import Hash "mo:base/Hash";
 
 
 actor ICPTutorials = {
 
-  let DAO = Principal.fromText("aaa.aaaa");
+  let DAO = Principal.fromText("aaaaa-aa");
   public type Tutorial = Types.Tutorial;
   public type Publication = Types.Publication;
   public type Account  = Account.Account;
@@ -21,12 +24,13 @@ actor ICPTutorials = {
   public type SignUpResult = Result.Result<User,Member.SignUpErrors>;
   public type PublishResult = Result.Result<Publication, Text>;
   public type TutoId = Nat;
+  public type UserId = Nat;
 
-  //stable var incomingTutorials: [Tutorial] = [];
-  stable var userId = 0;
-  stable var tutorialId = 0;
+  stable var currentUserId = 0;
+  stable var currentTutorialId = 0;
   let ledger = HashMap.HashMap<Account, Nat>(1, Account.accountsEqual, Account.accountsHash);
-  let users = HashMap.HashMap<Principal,User>(1, Principal.equal, Principal.hash);
+  let userIds = HashMap.HashMap<Principal,UserId>(1, Principal.equal, Principal.hash);
+  let users = HashMap.HashMap<Nat,User>(1, Nat.equal, Nat32.fromNat);
   let blackList = HashMap.HashMap<Principal,()>(0, Principal.equal, Principal.hash);
   
   var incomingPublications = HashMap.HashMap<TutoId,Publication>(1, Types.tutoIdEqual, Types.tutoIdHash);
@@ -43,18 +47,19 @@ actor ICPTutorials = {
     //TODO: Validación de campos
     if(Principal.isAnonymous(caller)){ return #err(#CallerAnnonymous)};
     if(inBlackList(caller)){ return #err(#InBlackList)};
-    switch(users.get(caller)){
+    switch(userIds.get(caller)){
       case null{
         let timestamp = Time.now() / 1_000_000_000: Int; //Timestamp in seconds
+        userIds.put(caller,currentUserId);
+        
         let newMember = {
-          id = userId;
           name;
           birthdate; //DDMMAAAA
           admissionDate = timestamp; 
           sex;
         };
-        userId += 1;
-        users.put(caller,newMember);
+        users.put(currentUserId,newMember);
+        currentUserId += 1;
         return #ok(newMember);
       };
       case (?member){
@@ -63,23 +68,27 @@ actor ICPTutorials = {
     };    
   };
 
-  func isMember(p: Principal): Bool{
-    return switch (users.get(p)){
+  func isUser(p: Principal): Bool{
+    return switch (userIds.get(p)){
       case null{false};
       case _{true};
     };
   };
   public shared ({caller}) func publish(content: Tutorial): async PublishResult{
-    if(not isMember(caller)){ return #err("Caller is not a member")};
-    let date = Time.now() / 1_000_000_000: Int;
-    let pub = {
-      autorPrincipal = caller;
-      date;
-      content;
+    switch(userIds.get(caller)){
+      case null { return #err("Caller is not a member")};
+      case (?userId) {
+        let date = Time.now() / 1_000_000_000: Int;
+        let pub = {
+          autor = userId;
+          date;
+          content;
+        };
+        incomingPublications.put(currentTutorialId, pub);
+        currentTutorialId += 1;
+        #ok(pub);
+      };
     };
-    incomingPublications.put(tutorialId, pub);
-    tutorialId += 1;
-    #ok(pub);
   };
 
   public shared ({caller}) func aprovePublication(id: Nat):async Result.Result<(), Text> {
@@ -110,5 +119,9 @@ actor ICPTutorials = {
     return Iter.toArray(aprovedPublications.vals());
   };
 
+  public query func getPubFromUser(userId: Nat): async [Publication]{
+    var pubs = Iter.toArray(aprovedPublications.vals());
+    Array.filter<Publication>(pubs, func x: Bool {x.autor == userId});  
+  };
 
 };

@@ -2,7 +2,6 @@
 
 module{
     public type Member = {
-        id: Nat;
         name: Text;
         birthdate: ?Nat; //DDMMAAA
         admissionDate: Int; //Timestamp in secconds 
