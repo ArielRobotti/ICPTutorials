@@ -4,6 +4,7 @@ import HashMap "mo:base/HashMap";
 import Result "mo:base/Result";
 
 
+
 shared ({caller}) actor class Dao(name: Text, manifesto: Text, founders: [(Principal, Types.Member)]) = {
     type Member = Types.Member;
     type Mode = Types.Mode;
@@ -50,7 +51,7 @@ shared ({caller}) actor class Dao(name: Text, manifesto: Text, founders: [(Princ
     };
     func addMember(p: Principal, m: Member): updateMembersResult{
         if(_isAMember(p)){
-            return #err("Is member")
+            return #err("Is a member")
         };
         members.put(caller, m);
         #ok(null);

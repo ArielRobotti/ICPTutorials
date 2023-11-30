@@ -15,4 +15,9 @@ module{
         #Female;
         #NonBinary;   
     };
+    public type SignUpErrors = {
+        #CallerAnnonymous;
+        #IsAlreadyAMember;
+        #InBlackList;
+    };
 }
