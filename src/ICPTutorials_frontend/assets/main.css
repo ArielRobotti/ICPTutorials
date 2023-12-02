@@ -1,37 +1,109 @@
+/* Reset de estilos y estilos generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: sans-serif;
-    font-size: 1.5rem;
+    background-color: #212428;
+    font-family: Arial, sans-serif;
+    color: #f9f9f9; /* Texto blanco */
 }
 
-img {
-    max-width: 50vw;
-    max-height: 25vw;
-    display: block;
-    margin: auto;
-}
-
-form {
+/* Estilos de la barra de navegación */
+.navbar {
+    background-color: #121212;
+    color: #f9f9f9; /* Texto blanco */
+    padding: 15px;
+    padding-left: 180px;
     display: flex;
-    justify-content: center;
-    gap: 0.5em;
-    flex-flow: row wrap;
-    max-width: 40vw;
-    margin: auto;
-    align-items: baseline;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 2;
 }
 
-button[type="submit"] {
-    padding: 5px 20px;
-    margin: 10px auto;
-    float: right;
+.logo {
+    display: flow-root;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.5em;
+    font-weight: bold;
+    z-index: 3;
+}
+.logo img {
+    width: 150px;
 }
 
-#greeting {
-    margin: 10px auto;
-    padding: 10px 60px;
-    border: 1px solid #222;
+.nav-links {
+    list-style: none;
+    display: flex;
 }
 
-#greeting:empty {
-    display: none;
+.nav-links li {
+    margin-right: 20px;
 }
+
+.nav-links a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.search-bar {
+    background-color: #ffffff;
+    padding-left: 5px;
+    border-radius: 30px;
+    width: 50%;
+    display: flex;
+}
+.search-bar:hover {
+    background-color: #dadba4;
+    
+}
+
+.search-bar input {
+    font-size:large;
+    color: #141827;
+    width: 85%;
+    border: none;
+    outline: none;
+    background-color: #ffffff00;
+    padding: 5px;
+} 
+.search-btn {
+    background-color: #ffffff00;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+button:hover {
+    transform: acale(1.1);
+
+}
+
+.auth-buttons button {
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* Estilos del contenido dinámico */
+.content {
+    margin-top: 80px; /* Altura de la barra de navegación */
+    padding: 20px;
+}
+
+/* Estilos del pie de página */
+.footer {
+    background-color: #121212; /* Dark blue/oscuro */
+    color: #ffffff; /* Texto blanco */
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+

@@ -24,7 +24,7 @@ module{
         title: Text;  //Limitar a 100 caracteres
         tags: [Text];
         html: Text; //Se genera automaticamente desde el front
-        assets: [Blob];
+        assets: ?[Blob];
         //La hoja de estilos es comun para todos los tutoriales    
     };
     public type TutoId = Nat;

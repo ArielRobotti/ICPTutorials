@@ -13,10 +13,9 @@ import Account "account";
 import Iter "mo:base/Iter";
 // import Hash "mo:base/Hash";
 
-
 actor ICPTutorials = {
 
-  let DAO = Principal.fromText("aaaaa-aa");
+  //let DAO = Principal.fromText("aaaaa-aa");
   public type Tutorial = Types.Tutorial;
   public type Publication = Types.Publication;
   public type Account  = Account.Account;
@@ -28,19 +27,28 @@ actor ICPTutorials = {
 
   stable var currentUserId = 0;
   stable var currentTutorialId = 0;
-  let ledger = HashMap.HashMap<Account, Nat>(1, Account.accountsEqual, Account.accountsHash);
+  stable var admins: [Principal] = [];
+
+  //let ledger = HashMap.HashMap<Account, Nat>(1, Account.accountsEqual, Account.accountsHash);
   let userIds = HashMap.HashMap<Principal,UserId>(1, Principal.equal, Principal.hash);
   let users = HashMap.HashMap<UserId,User>(1, Nat.equal, Nat32.fromNat);
+  
   let blackList = HashMap.HashMap<Principal,()>(0, Principal.equal, Principal.hash);
   
   var incomingPublications = HashMap.HashMap<TutoId,Publication>(1, Types.tutoIdEqual, Types.tutoIdHash);
   var aprovedPublications = HashMap.HashMap<TutoId,Publication>(1, Types.tutoIdEqual, Types.tutoIdHash);
 
   func inBlackList(p: Principal): Bool{
-    return switch(blackList.get(p)){
+    return switch (blackList.get(p)) {
       case null{false};
       case _{true};
     };
+  };
+  func isAdmin(p: Principal): Bool{
+    for(a in admins.vals()){
+      if(a == p){ return true};
+    };
+    false;
   };
 
   public shared ({caller}) func signUp(name: Text, birthdate: ?Nat, sex: ?Member.Sex): async SignUpResult{
@@ -92,7 +100,8 @@ actor ICPTutorials = {
   };
 
   public shared ({caller}) func aprovePublication(id: Nat):async Result.Result<(), Text> {
-    assert (caller != DAO);
+    // assert (caller != DAO);
+    assert (isAdmin(caller));
     switch (incomingPublications.remove(id)){
       case null{return #err("Tutorial id does not exist")};
       case (?tuto){
@@ -103,7 +112,8 @@ actor ICPTutorials = {
   };
 
   public shared ({caller}) func rejectPublication(id: Nat):async Result.Result<(), Text> {
-    assert (caller != DAO);
+    //assert (caller != DAO);
+    assert (isAdmin(caller));
     return switch (incomingPublications.remove(id)){
       case null{#err("Tutorial id does not exist")};
       case (_){#ok()};
@@ -111,11 +121,12 @@ actor ICPTutorials = {
   };
 
   public shared ({caller}) func getIncomingPublication(): async [Publication]{
-    assert (caller != DAO);
+    //assert (caller != DAO);
+    assert (isAdmin(caller));
     return Iter.toArray(aprovedPublications.vals());
   };
 
-  public shared func getAprovedPublication(): async [Publication]{
+  public query func getAprovedPublication(): async [Publication]{
     return Iter.toArray(aprovedPublications.vals());
   };
   
