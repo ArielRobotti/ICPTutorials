@@ -13,7 +13,7 @@ import Account "account";
 import Iter "mo:base/Iter";
 // import Hash "mo:base/Hash";
 
-actor ICPTutorials = {
+shared ({caller}) actor class ICPTutorials() = {
 
   //let DAO = Principal.fromText("aaaaa-aa");
   public type Tutorial = Types.Tutorial;
@@ -27,7 +27,7 @@ actor ICPTutorials = {
 
   stable var currentUserId = 0;
   stable var currentTutorialId = 0;
-  stable var admins: [Principal] = [];
+  stable var admins: [Principal] = [caller];
 
   //let ledger = HashMap.HashMap<Account, Nat>(1, Account.accountsEqual, Account.accountsHash);
   let userIds = HashMap.HashMap<Principal,UserId>(1, Principal.equal, Principal.hash);
@@ -51,7 +51,7 @@ actor ICPTutorials = {
     false;
   };
 
-  public shared ({caller}) func signUp(name: Text, birthdate: ?Nat, sex: ?Member.Sex): async SignUpResult{
+  public shared ({caller}) func signUp(name: Text, avatar: ?Blob, birthdate: ?Nat, sex: ?Member.Sex): async SignUpResult{
     //TODO: Validación de campos
     if(Principal.isAnonymous(caller)){ return #err(#CallerAnnonymous)};
     if(inBlackList(caller)){ return #err(#InBlackList)};
@@ -63,6 +63,7 @@ actor ICPTutorials = {
         let newMember = {
           name;
           birthdate; //DDMMAAAA
+          avatar;
           admissionDate = timestamp; 
           sex;
         };
@@ -74,6 +75,39 @@ actor ICPTutorials = {
         return #err(#IsAlreadyAMember);
       };
     };    
+  };
+  public shared ({caller}) func getMiId(): async ?Nat { userIds.get(caller) };
+  public shared ({caller}) func getMiUser(): async ?User { 
+    switch(userIds.get(caller)){
+      case null {return null};
+      case (?userId){
+        return users.get(userId);
+      }
+    } 
+  };
+
+  public shared ({caller}) func loadAvatar(avatar: Blob):async ?Blob{
+    switch(userIds.get(caller)){
+      case null{return null};
+      case (?userId){
+        switch (users.get(userId)){
+          case null{ return null};
+          case (?user){   
+            //comprimir la imagen     
+            var userUpdate ={
+              name = user.name;
+              birthdate = user.birthdate; //DDMMAAA
+              admissionDate = user.admissionDate; //Timestamp in secconds 
+              //account = user.account;
+              avatar = ?avatar;
+              sex = user.sex;
+            };
+            users.put(userId,userUpdate);
+            return userUpdate.avatar;
+          };
+        };
+      };
+    };
   };
 
   func isUser(p: Principal): Bool{
@@ -99,6 +133,12 @@ actor ICPTutorials = {
     };
   };
 
+  public query func getUser(p: Principal): async ?User{
+    switch(userIds.get(p)){
+      case null{null};
+      case(?userId){users.get(userId)};
+    };
+  }; 
   public shared ({caller}) func aprovePublication(id: Nat):async Result.Result<(), Text> {
     // assert (caller != DAO);
     assert (isAdmin(caller));
@@ -123,7 +163,7 @@ actor ICPTutorials = {
   public shared ({caller}) func getIncomingPublication(): async [Publication]{
     //assert (caller != DAO);
     assert (isAdmin(caller));
-    return Iter.toArray(aprovedPublications.vals());
+    return Iter.toArray(incomingPublications.vals());
   };
 
   public query func getAprovedPublication(): async [Publication]{

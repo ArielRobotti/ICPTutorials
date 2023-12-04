@@ -6,6 +6,7 @@ module{
         birthdate: ?Nat; //DDMMAAA
         admissionDate: Int; //Timestamp in secconds 
         //account: Account;
+        avatar: ?Blob;
         sex: ?Sex;
     };
 

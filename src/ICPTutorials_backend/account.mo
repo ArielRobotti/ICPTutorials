@@ -45,6 +45,6 @@ module{
         for(i in ledger.vals()){
             if(i.owner == p){tempBuffer.add(i)};
         };
-        tempBuffer.toArray();
+        Buffer.toArray<Account>(tempBuffer);
     }
 };

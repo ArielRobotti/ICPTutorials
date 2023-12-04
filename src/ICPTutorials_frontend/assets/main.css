@@ -10,12 +10,46 @@ body {
     font-family: Arial, sans-serif;
     color: #f9f9f9; /* Texto blanco */
 }
+.login{
+    margin: 2px;
+    padding: 8px;
+    cursor: pointer;
+    width: 100px;
+    font-weight: bolder;
+    border: none;
+    background-color: #bb9cdb;
+    border-radius: 18px;   
+}
+
+.login:hover{ 
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+    background-color: #cbb7df;
+}
+#loading-spinner {
+    box-shadow: 0 0 40px #0f0;
+    border: 16px solid rgba(255, 255, 255, 0.3);
+    border-top: 16px solid #48ff00;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 1s linear infinite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none; /* Ocultar inicialmente */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
 /* Estilos de la barra de navegación */
 .navbar {
     background-color: #121212;
     color: #f9f9f9; /* Texto blanco */
-    padding: 15px;
+    padding: 10px;
     padding-left: 180px;
     display: flex;
     justify-content: space-between;
@@ -55,43 +89,43 @@ body {
 
 .search-bar {
     background-color: #ffffff;
-    padding-left: 5px;
     border-radius: 30px;
     width: 50%;
     display: flex;
+    justify-content: space-between;
 }
 .search-bar:hover {
-    background-color: #dadba4;
+    background-color: #d1f7c8;
     
 }
 
 .search-bar input {
     font-size:large;
     color: #141827;
-    width: 85%;
+    width: 75%;
     border: none;
     outline: none;
     background-color: #ffffff00;
     padding: 5px;
 } 
 .search-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     background-color: #ffffff00;
     border: none;
     cursor: pointer;
-    transition: transform 0.3s ease-in-out;
 }
-button:hover {
-    transform: acale(1.1);
+.search-btn:hover {
+    background-color: #4c00ff58;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
 
-}
-
-.auth-buttons button {
-    padding: 8px;
-    cursor: pointer;
 }
 
 /* Estilos del contenido dinámico */
-.content {
+#content {
+    margin-top: 80px;
+    text-align: center;
     margin-top: 80px; /* Altura de la barra de navegación */
     padding: 20px;
 }

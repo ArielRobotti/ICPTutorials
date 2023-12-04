@@ -26,6 +26,7 @@ shared ({caller}) actor class Dao(name: Text, manifesto: Text, founders: [(Princ
             case (_) { true};
         };
     };
+    
 
     public shared ({caller}) func updateMembers(p: ?Principal, mode: Mode, member: ?Member): async updateMembersResult{
         if(not _isAMember(caller)){return #err("Caller is not a member")};
