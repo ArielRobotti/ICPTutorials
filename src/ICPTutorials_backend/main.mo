@@ -51,7 +51,7 @@ shared ({caller}) actor class ICPTutorials() = {
     false;
   };
 
-  public shared ({caller}) func signUp(name: Text, avatar: ?Blob, birthdate: ?Nat, sex: ?Member.Sex): async SignUpResult{
+  public shared ({caller}) func signUp(name: Text, sex: ?Member.Sex): async SignUpResult{
     //TODO: Validación de campos
     if(Principal.isAnonymous(caller)){ return #err(#CallerAnnonymous)};
     if(inBlackList(caller)){ return #err(#InBlackList)};
@@ -62,10 +62,11 @@ shared ({caller}) actor class ICPTutorials() = {
         
         let newMember = {
           name;
-          birthdate; //DDMMAAAA
-          avatar;
+          country = null;
           admissionDate = timestamp; 
           sex;
+          avatar = null;
+          birthdate = null; //DDMMAAAA
         };
         users.put(currentUserId,newMember);
         currentUserId += 1;
@@ -96,6 +97,7 @@ shared ({caller}) actor class ICPTutorials() = {
             //comprimir la imagen     
             var userUpdate ={
               name = user.name;
+              country = user.country;
               birthdate = user.birthdate; //DDMMAAA
               admissionDate = user.admissionDate; //Timestamp in secconds 
               //account = user.account;

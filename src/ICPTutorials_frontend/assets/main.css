@@ -8,9 +8,11 @@
 body {
     background-color: #212428;
     font-family: Arial, sans-serif;
-    color: #f9f9f9; /* Texto blanco */
+    color: #f9f9f9;
+    /* Texto blanco */
 }
-.login{
+
+.login {
     margin: 2px;
     padding: 8px;
     cursor: pointer;
@@ -18,13 +20,14 @@ body {
     font-weight: bolder;
     border: none;
     background-color: #bb9cdb;
-    border-radius: 18px;   
+    border-radius: 18px;
 }
 
-.login:hover{ 
+.login:hover {
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
     background-color: #cbb7df;
 }
+
 #loading-spinner {
     box-shadow: 0 0 40px #0f0;
     border: 16px solid rgba(255, 255, 255, 0.3);
@@ -34,21 +37,26 @@ body {
     height: 120px;
     animation: spin 1s linear infinite;
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 44%;
+    left: 44%;
     display: none; /* Ocultar inicialmente */
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Estilos de la barra de navegación */
 .navbar {
     background-color: #121212;
-    color: #f9f9f9; /* Texto blanco */
+    color: #f9f9f9;
+    /* Texto blanco */
     padding: 10px;
     padding-left: 180px;
     display: flex;
@@ -69,6 +77,7 @@ body {
     font-weight: bold;
     z-index: 3;
 }
+
 .logo img {
     width: 150px;
 }
@@ -93,21 +102,24 @@ body {
     width: 50%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
+
 .search-bar:hover {
     background-color: #d1f7c8;
-    
+
 }
 
 .search-bar input {
-    font-size:large;
+    font-size: large;
     color: #141827;
     width: 75%;
     border: none;
     outline: none;
     background-color: #ffffff00;
     padding: 5px;
-} 
+}
+
 .search-btn {
     width: 32px;
     height: 32px;
@@ -116,6 +128,7 @@ body {
     border: none;
     cursor: pointer;
 }
+
 .search-btn:hover {
     background-color: #4c00ff58;
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
@@ -126,18 +139,85 @@ body {
 #content {
     margin-top: 80px;
     text-align: center;
-    margin-top: 80px; /* Altura de la barra de navegación */
+    margin-top: 80px;
+    /* Altura de la barra de navegación */
     padding: 20px;
+
+}
+
+#contenido-dinamico>div,
+#content>form {
+    width: 90%;
+    top: 50px;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.7s ease-in-out;
+}
+
+form {
+    background-color: rgb(76 77 81 / 65%);
+    /* rgba(255, 255, 255, 0.884);*/
+    border-radius: 30px;
+    padding: 20px;
+    width: 100%;
+    /* Ajuste del ancho */
+    max-width: 900px;
+    /* Máximo ancho */
+    margin: 2% auto;
+}
+
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-left: 5%;
+}
+
+input,
+.select-form {
+    background-color: #6779997d;
+    color: #000;
+    font-size: large;
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    margin-bottom: 10px;
+    padding-left: 5%;
+    /* text-align: center; */
+}
+
+/* Estilos para campos incompletos */
+.campo-incompleto {
+    border: 1px solid red; /* Cambiar el borde a rojo */
+    background-color: #ffeeee; /* Cambiar el fondo a un tono rosado claro */
+    color: red; 
+  }
+
+.submit {
+    width: 100%;
+    font-size: 22px;
+    background-color: #1a0d93;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 30px;
+    border-style: groove;
+    border-color: #07051b;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
 }
 
 /* Estilos del pie de página */
 .footer {
-    background-color: #121212; /* Dark blue/oscuro */
-    color: #ffffff; /* Texto blanco */
+    background-color: #121212;
+    /* Dark blue/oscuro */
+    color: #ffffff;
+    /* Texto blanco */
     text-align: center;
     padding: 10px;
     position: fixed;
     width: 100%;
     bottom: 0;
 }
-

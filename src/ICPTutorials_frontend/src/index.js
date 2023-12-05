@@ -7,17 +7,17 @@ let back = ICPTutorials_backend;
 let login = false;
 
 document.addEventListener("DOMContentLoaded", async function () {
+    cargarContenidoDinamico("./pages/home.html")
+
     const connectButton = document.getElementById("connect");
     connectButton.onclick = async (e) => {
         e.preventDefault();
-        console.log(login);
-        console.log(e.target.id)
         if (login) {
             back = ICPTutorials_backend;
             //resetFront();
             connectButton.innerText = "Connect";
             login = false;
-            console.log(login);
+            cargarContenidoDinamico("./pages/home.html")
             return;
         }
         else {
@@ -44,12 +44,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             login = true;
             connectButton.innerText = "Disconnect";
             let user = await back.getMiUser();
-            if(user === null){
+            if(user.length == 0){
                 cargarContenidoDinamico("./pages/signUpForm.html");
             }
             else{
-                cargarContenidoDinamico("./pages/signUpForm.html");
-                // cargarPerfil(user);
+                cargarPerfil(user);
             }
             connectButton.style.visibility = "visible";
             ocultarSpinner();

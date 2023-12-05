@@ -3,10 +3,11 @@
 module{
     public type Member = {
         name: Text;
-        birthdate: ?Nat; //DDMMAAA
-        admissionDate: Int; //Timestamp in secconds 
-        //account: Account;
         avatar: ?Blob;
+        birthdate: ?Nat; //DDMMAAA
+        admissionDate: Int; //Timestamp in secconds
+        country: ?Text;
+        //account: Account;
         sex: ?Sex;
     };
 
