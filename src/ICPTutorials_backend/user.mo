@@ -1,7 +1,7 @@
 
 
 module{
-    public type Member = {
+    public type User = {
         name: Text;
         avatar: ?Blob;
         birthdate: ?Nat; //DDMMAAA

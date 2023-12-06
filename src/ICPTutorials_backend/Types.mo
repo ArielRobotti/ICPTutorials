@@ -12,7 +12,8 @@ module{
     public type Sex = {
         #Male;
         #Female;
-        #NonBinary;   
+        #NonBinary;
+        
     };
 
     public type Mode = {

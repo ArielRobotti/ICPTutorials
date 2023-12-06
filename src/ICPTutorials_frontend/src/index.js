@@ -1,10 +1,11 @@
-import {createActor,ICPTutorials_backend} from "../../declarations/ICPTutorials_backend";
+import { createActor, ICPTutorials_backend } from "../../declarations/ICPTutorials_backend";
 import { AuthClient } from "@dfinity/auth-client";
 import { HttpAgent } from "@dfinity/agent";
 import { Principal } from "@dfinity/candid/lib/cjs/idl";
 
 let back = ICPTutorials_backend;
 let login = false;
+let user;
 
 document.addEventListener("DOMContentLoaded", async function () {
     cargarContenidoDinamico("./pages/home.html")
@@ -43,11 +44,19 @@ document.addEventListener("DOMContentLoaded", async function () {
             // resetFront();
             login = true;
             connectButton.innerText = "Disconnect";
-            let user = await back.getMiUser();
-            if(user.length == 0){
+            user = await back.getMiUser();
+            if (user.length == 0) {
                 cargarContenidoDinamico("./pages/signUpForm.html");
+                // Agregar el controlador de eventos después de cargar el formulario
+                document.getElementById("signUpForm").addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    var name = document.getElementById("name").value;
+                    var sex = document.getElementById("sex").value;
+                    user = back.signUp(name, sex);
+                    cargarPerfil(user);
+                });
             }
-            else{
+            else {
                 cargarPerfil(user);
             }
             connectButton.style.visibility = "visible";
@@ -57,6 +66,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
 
     const contenidoDinamico = document.getElementById("content");
+
+    const signUpSubmit = document.getElementById("signUpSubmit");
+    signUpSubmit.onclick = async (e) => {
+        e.preventDefault();
+
+    }
 
     function cargarContenidoDinamico(url) {
         var xhr = new XMLHttpRequest();

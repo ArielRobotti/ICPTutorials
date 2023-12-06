@@ -7,7 +7,7 @@ import Buffer "mo:base/Buffer";
 import HashMap "mo:base/HashMap";
 import Result "mo:base/Result";
 import Types "Types";
-import Member "member";
+import User "user";
 import Account "account";
 
 import Iter "mo:base/Iter";
@@ -19,8 +19,8 @@ shared ({caller}) actor class ICPTutorials() = {
   public type Tutorial = Types.Tutorial;
   public type Publication = Types.Publication;
   public type Account  = Account.Account;
-  public type User = Member.Member;
-  public type SignUpResult = Result.Result<User,Member.SignUpErrors>;
+  public type User = User.User;
+  public type SignUpResult = Result.Result<User,User.SignUpErrors>;
   public type PublishResult = Result.Result<Publication, Text>;
   public type TutoId = Nat;
   public type UserId = Nat;
@@ -51,7 +51,7 @@ shared ({caller}) actor class ICPTutorials() = {
     false;
   };
 
-  public shared ({caller}) func signUp(name: Text, sex: ?Member.Sex): async SignUpResult{
+  public shared ({caller}) func signUp(name: Text, sex: ?User.Sex): async SignUpResult{
     //TODO: Validación de campos
     if(Principal.isAnonymous(caller)){ return #err(#CallerAnnonymous)};
     if(inBlackList(caller)){ return #err(#InBlackList)};
@@ -95,7 +95,7 @@ shared ({caller}) actor class ICPTutorials() = {
           case null{ return null};
           case (?user){   
             //comprimir la imagen     
-            var userUpdate ={
+            var userUpdate = {
               name = user.name;
               country = user.country;
               birthdate = user.birthdate; //DDMMAAA
@@ -118,6 +118,7 @@ shared ({caller}) actor class ICPTutorials() = {
       case _{true};
     };
   };
+  
   public shared ({caller}) func publish(content: Tutorial): async PublishResult{
     switch(userIds.get(caller)){
       case null { return #err("Caller is not a member")};
