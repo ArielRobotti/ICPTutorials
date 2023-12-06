@@ -72,31 +72,36 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const contenidoDinamico = document.getElementById("content");
 
-    const signUpSubmit = document.getElementById("signUpSubmit");
-    signUpSubmit.onclick = async (e) => {
-        e.preventDefault();
-    };
+    // const signUpSubmit = document.getElementById("signUpSubmit");
+    // signUpSubmit.onclick = async (e) => {
+    //     e.preventDefault();
+    // };
 
     function cargarContenidoDinamico(url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
         xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                contenidoDinamico.innerHTML = xhr.responseText;
-                var contNuevo = contenidoDinamico.firstElementChild;
-                contNuevo.style.opacity = "0"; // Configurar el nuevo contenido con opacidad 0
-
-                setTimeout(function () {
-                    contNuevo.style.opacity = "1"; // Aplicar fade in al nuevo contenido
-                }, 10);
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    contenidoDinamico.innerHTML = xhr.responseText;
+                    var contNuevo = contenidoDinamico.firstElementChild;
+                    contNuevo.style.opacity = "0"; // Configurar el nuevo contenido con opacidad 0
+    
+                    setTimeout(function () {
+                        contNuevo.style.opacity = "1"; // Aplicar fade in al nuevo contenido
+                    }, 10);
+    
+                    // Llamar a la función de devolución de llamada solo después de cargar el contenido
+                    if (callback) {
+                        callback();
+                    }
+                } else {
+                    console.error("Error al cargar el contenido:", xhr.status);
+                }
             }
         };
         xhr.send();
-        if (callback) {
-            callback();
-        }
-    };
-
+    }
 
 
     function formOK(form) {
