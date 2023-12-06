@@ -88,14 +88,39 @@ shared ({caller}) actor class ICPTutorials() = {
     } 
   };
 
-  public shared ({caller}) func userConfig(settings: UserSettings): async User{
-    assert isUser(caller);
-    switch(getUser(caller)){
-      case null {null};
-
-    }
-
+  public shared ({caller}) func userConfig(settings: UserSettings): async (){
     
+    switch(getUser(caller)){
+      case null {};
+      case (?user){
+        var userId = 0;
+        switch (userIds.get(caller)){
+          case null { return };
+          case (?id) {userId := id};
+        };
+        let updateUser = {
+          name = switch (settings.name){
+            case null{user.name};
+            case (?newName) {newName};
+          };
+          avatar = switch (settings.avatar) {
+            case null { user.avatar};
+            case (newAvatar) {newAvatar}
+          };
+          country = switch (settings.country) {
+            case null { user.country};
+            case (newCountry) {newCountry};
+          };
+          sex = switch(settings.sex){
+            case null {null};
+            case (newSex) {newSex};
+          };
+          birthdate = user.birthdate;
+          admissionDate = user.admissionDate;
+        };
+        users.put(userId,updateUser)
+      };
+    };
   };
 
   public shared ({caller}) func loadAvatar(avatar: Blob):async ?Blob{
