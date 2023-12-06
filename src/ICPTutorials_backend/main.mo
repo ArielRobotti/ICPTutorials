@@ -24,6 +24,7 @@ shared ({caller}) actor class ICPTutorials() = {
   public type PublishResult = Result.Result<Publication, Text>;
   public type TutoId = Nat;
   public type UserId = Nat;
+  public type UserSettings = User.UserSettings;
 
   stable var currentUserId = 0;
   stable var currentTutorialId = 0;
@@ -87,6 +88,16 @@ shared ({caller}) actor class ICPTutorials() = {
     } 
   };
 
+  public shared ({caller}) func userConfig(settings: UserSettings): async User{
+    assert isUser(caller);
+    switch(getUser(caller)){
+      case null {null};
+
+    }
+
+    
+  };
+
   public shared ({caller}) func loadAvatar(avatar: Blob):async ?Blob{
     switch(userIds.get(caller)){
       case null{return null};
@@ -136,12 +147,13 @@ shared ({caller}) actor class ICPTutorials() = {
     };
   };
 
-  public query func getUser(p: Principal): async ?User{
+  func getUser(p: Principal): ?User{
     switch(userIds.get(p)){
       case null{null};
       case(?userId){users.get(userId)};
     };
-  }; 
+  };
+
   public shared ({caller}) func aprovePublication(id: Nat):async Result.Result<(), Text> {
     // assert (caller != DAO);
     assert (isAdmin(caller));

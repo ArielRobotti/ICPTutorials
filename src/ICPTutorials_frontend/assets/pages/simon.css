@@ -3,6 +3,7 @@
     height: 200px;
     border: 70px solid;
     border-color: #00000000;
+    border-radius: 50%;
 }
 #verde {
     border-top: #00ff00;

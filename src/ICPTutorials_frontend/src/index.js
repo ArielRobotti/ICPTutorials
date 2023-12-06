@@ -46,21 +46,26 @@ document.addEventListener("DOMContentLoaded", async function () {
             connectButton.innerText = "Disconnect";
             user = await back.getMiUser();
             if (user.length == 0) {
-                cargarContenidoDinamico("./pages/signUpForm.html");
-                // Agregar el controlador de eventos después de cargar el formulario
-                document.getElementById("signUpForm").addEventListener("submit", function (event) {
-                    event.preventDefault();
-                    var name = document.getElementById("name").value;
-                    var sex = document.getElementById("sex").value;
-                    user = back.signUp(name, sex);
-                    cargarPerfil(user);
+                ocultarSpinner();
+                cargarContenidoDinamico("./pages/signUpForm.html", function () {
+                    // Lógica específica después de cargar el formulario
+                    document.getElementById("signUpForm").addEventListener("submit", function (e) {
+                        console.log(e.target.id);
+                        e.preventDefault();
+                        var name = document.getElementById("name").value;
+                        var sex = document.getElementById("sex").value;
+                        user = back.signUp(name, sex);
+                        console.log(user);
+                        cargarPerfil(user);
+                    });
                 });
             }
             else {
+                ocultarSpinner();
+                console.log(user.name + " ya es usuario")
                 cargarPerfil(user);
-            }
+            };
             connectButton.style.visibility = "visible";
-            ocultarSpinner();
             return false;
         };
     };
@@ -70,10 +75,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     const signUpSubmit = document.getElementById("signUpSubmit");
     signUpSubmit.onclick = async (e) => {
         e.preventDefault();
+    };
 
-    }
-
-    function cargarContenidoDinamico(url) {
+    function cargarContenidoDinamico(url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
         xhr.onreadystatechange = function () {
@@ -88,7 +92,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         };
         xhr.send();
+        if (callback) {
+            callback();
+        }
     };
+
+
 
     function formOK(form) {
         const campos = form.querySelectorAll("input[required]");

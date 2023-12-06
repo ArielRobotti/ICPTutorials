@@ -1,6 +1,12 @@
 
 
 module{
+    public type UserSettings = {
+        name: ?Text;
+        avatar: ?Blob;
+        country: ?Text;
+        sex: ?Sex;
+    };
     public type User = {
         name: Text;
         avatar: ?Blob;
