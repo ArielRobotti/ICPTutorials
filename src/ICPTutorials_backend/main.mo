@@ -39,6 +39,10 @@ shared ({caller}) actor class ICPTutorials() = {
   var incomingPublications = HashMap.HashMap<TutoId,Publication>(1, Types.tutoIdEqual, Types.tutoIdHash);
   var aprovedPublications = HashMap.HashMap<TutoId,Publication>(1, Types.tutoIdEqual, Types.tutoIdHash);
 
+  public query func getUsers(): async [User]{
+    Iter.toArray<User>(users.vals());
+  };
+
   func inBlackList(p: Principal): Bool{
     return switch (blackList.get(p)) {
       case null{false};
@@ -52,7 +56,7 @@ shared ({caller}) actor class ICPTutorials() = {
     false;
   };
 
-  public shared ({caller}) func signUp(name: Text, sex: ?User.Sex): async SignUpResult{
+  public shared ({caller}) func signUp(name: Text, sex: ?Text): async SignUpResult{
     //TODO: Validación de campos
     if(Principal.isAnonymous(caller)){ return #err(#CallerAnnonymous)};
     if(inBlackList(caller)){ return #err(#InBlackList)};

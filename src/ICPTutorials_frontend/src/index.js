@@ -50,12 +50,13 @@ document.addEventListener("DOMContentLoaded", async function () {
                 cargarContenidoDinamico("./pages/signUpForm.html", function () {
                     // Lógica específica después de cargar el formulario
                     document.getElementById("signUpForm").addEventListener("submit", function (e) {
-                        console.log(e.target.id);
                         e.preventDefault();
                         var name = document.getElementById("name").value;
-                        var sex = document.getElementById("sex").value;
+                        var sexValue = document.getElementById("sex").value;
+                        sex = { [formData.get("country")]: null};
+                        console.log(sex);
                         user = back.signUp(name, sex);
-                        console.log(user);
+                        
                         cargarPerfil(user);
                     });
                 });

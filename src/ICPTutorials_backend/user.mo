@@ -5,7 +5,7 @@ module{
         name: ?Text;
         avatar: ?Blob;
         country: ?Text;
-        sex: ?Sex;
+        sex: ?Text;
     };
     public type User = {
         name: Text;
@@ -14,14 +14,9 @@ module{
         admissionDate: Int; //Timestamp in secconds
         country: ?Text;
         //account: Account;
-        sex: ?Sex;
+        sex: ?Text;
     };
 
-    public type Sex = {
-        #Male;
-        #Female;
-        #NonBinary;   
-    };
     public type SignUpErrors = {
         #CallerAnnonymous;
         #IsAlreadyAMember;
