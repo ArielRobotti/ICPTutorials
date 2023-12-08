@@ -11,6 +11,7 @@ import User "user";
 import Account "account";
 
 import Iter "mo:base/Iter";
+import Text "mo:base/Text";
 // import Hash "mo:base/Hash";
 
 shared ({caller}) actor class ICPTutorials() = {
@@ -228,6 +229,37 @@ shared ({caller}) actor class ICPTutorials() = {
   public query func getPubFromUser(userId: Nat): async [Publication]{
     var pubs = Iter.toArray(aprovedPublications.vals());
     Array.filter<Publication>(pubs, func x: Bool {x.autor == userId});  
+  };
+
+  public query func getPubByID(id: Nat): async ?Publication{
+    aprovedPublications.get(id);
+  };
+  
+  public query func search(target : Text) : async [Publication] {
+    var tokens = Iter.fromArray<Text>([]);
+    let pubs = aprovedPublications.vals();
+    let tempBuffer = Buffer.fromArray<Publication>([]);
+    label for0 loop {
+      switch (pubs.next()) {
+        case (?pub) {
+          tokens := Text.split(target, #char(' '));
+          label for1 loop {
+            switch (tokens.next()) {
+              case (?p) {
+                if (Text.contains(pub.content.title, #text(p))) {
+                  tempBuffer.add(pub);
+                  break for1;
+                };
+              };
+              case (null) break for1;
+            };
+          };
+
+        };
+        case null { break for0 };
+      };
+    };
+    Buffer.toArray<Publication>(tempBuffer);
   };
 
 };
