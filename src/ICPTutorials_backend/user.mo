@@ -15,6 +15,7 @@ module{
         country: ?Text;
         //account: Account;
         sex: ?Text;
+        votedPosts: [Nat];
     };
 
     public type SignUpErrors = {
