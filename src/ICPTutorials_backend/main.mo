@@ -220,8 +220,9 @@ shared ({caller}) actor class ICPTutorials() = {
     return Iter.toArray(incomingPublications.vals());
   };
 
-  public query func getAprovedPublication(): async [Publication]{
-    return Iter.toArray(aprovedPublications.vals());
+  public query func getAprovedPublication(): async [(TutoId, Publication)]{
+    
+    return Iter.toArray(aprovedPublications.entries());
   };
   
   public query func getPubFromUser(userId: Nat): async [Publication]{
