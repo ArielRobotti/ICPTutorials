@@ -49,15 +49,16 @@ document.addEventListener("DOMContentLoaded", async function () {
                 ocultarSpinner();
                 cargarContenidoDinamico("./pages/signUpForm.html", function () {
                     // Lógica específica después de cargar el formulario
-                    document.getElementById("signUpForm").addEventListener("submit", function (e) {
+                    document.getElementById("signUpForm").addEventListener("submit", async function (e) {
                         e.preventDefault();
                         var name = document.getElementById("name").value;
-                        var sexValue = document.getElementById("sex").value;
-                        sex = { [formData.get("country")]: null};
-                        console.log(sex);
-                        user = back.signUp(name, sex);
+                        var sex = document.getElementById("sex").value;
                         
-                        cargarPerfil(user);
+                        user = await back.signUp(name, sex);
+                        //console.log(back.getMiId);
+                        //console.log (back.getMiUser);
+                        console.log(user);
+                        //cargarPerfil(user);
                     });
                 });
             }

@@ -56,7 +56,17 @@ shared ({caller}) actor class ICPTutorials() = {
     false;
   };
 
-  public shared ({caller}) func signUp(name: Text, sex: ?Text): async SignUpResult{
+  public shared ({caller}) func addAdmin(p: Principal): async Bool{
+    assert(isAdmin(caller));
+    for(a in admins.vals()){ if(a == p){ return true}};
+    var tempBuffer = Buffer.fromArray<Principal>(admins);
+    tempBuffer.add(p);
+
+    admins := Buffer.toArray<Principal>(tempBuffer);
+    true;
+  };
+
+  public shared ({caller}) func signUp(name: Text, sex: Text): async SignUpResult{
     //TODO: Validación de campos
     if(Principal.isAnonymous(caller)){ return #err(#CallerAnnonymous)};
     if(inBlackList(caller)){ return #err(#InBlackList)};
@@ -69,7 +79,7 @@ shared ({caller}) actor class ICPTutorials() = {
           name;
           country = null;
           admissionDate = timestamp; 
-          sex;
+          sex = ?sex;
           avatar = null;
           birthdate = null; //DDMMAAAA
         };
