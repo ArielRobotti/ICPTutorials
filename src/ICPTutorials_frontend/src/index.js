@@ -6,6 +6,7 @@ import { Principal } from "@dfinity/candid/lib/cjs/idl";
 let back = ICPTutorials_backend;
 let login = false;
 let user;
+let userId;
 
 document.addEventListener("DOMContentLoaded", async function () {
     cargarContenidoDinamico("./pages/home.html")
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             back = ICPTutorials_backend;
             //resetFront();
             connectButton.innerText = "Connect";
+            document.getElementById("userNameLabel").innerText = "";
             login = false;
             cargarContenidoDinamico("./pages/home.html")
             return;
@@ -44,8 +46,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             // resetFront();
             login = true;
             connectButton.innerText = "Disconnect";
-            user = await back.getMiUser();
-            if (user.length == 0) {
+            [[user], [userId]] = await back.getMiUser();
+
+            if (user == undefined) {
                 ocultarSpinner();
                 cargarContenidoDinamico("./pages/signUpForm.html", function () {
                     // Lógica específica después de cargar el formulario
@@ -53,24 +56,21 @@ document.addEventListener("DOMContentLoaded", async function () {
                         e.preventDefault();
                         var name = document.getElementById("name").value;
                         var sex = document.getElementById("sex").value;
-                        
-                        user = await back.signUp(name, sex);
-                        //console.log(back.getMiId);
-                        //console.log (back.getMiUser);
-                        console.log(user);
-                        //cargarPerfil(user);
+                        [[user], [userId]] = await back.signUp(name, sex);
+                        cargarPerfil();
+                        cargarContenidoDinamico("./pages/home.html")
                     });
                 });
             }
             else {
                 ocultarSpinner();
-                console.log(user.name + " ya es usuario")
-                cargarPerfil(user);
+                cargarPerfil();
             };
             connectButton.style.visibility = "visible";
             return false;
         };
     };
+
 
     const contenidoDinamico = document.getElementById("content");
 
@@ -78,6 +78,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     // signUpSubmit.onclick = async (e) => {
     //     e.preventDefault();
     // };
+
+    function cargarPerfil(){
+        document.getElementById("userNameLabel").innerText = user.name + "#" + userId;
+
+    };
 
     function cargarContenidoDinamico(url, callback) {
         var xhr = new XMLHttpRequest();

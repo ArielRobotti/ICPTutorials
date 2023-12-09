@@ -27,7 +27,7 @@ shared ({caller}) actor class ICPTutorials() = {
   public type UserId = Nat;
   public type UserSettings = User.UserSettings;
 
-  stable var currentUserId = 0;
+  stable var currentUserId = 3141;
   stable var currentTutorialId = 0;
   stable var admins: [Principal] = [caller];
 
@@ -67,10 +67,9 @@ shared ({caller}) actor class ICPTutorials() = {
     true;
   };
 
-  public shared ({caller}) func signUp(name: Text, sex: Text): async SignUpResult{
+  public shared ({caller}) func signUp(name: Text, sex: Text): async (?User, ?UserId){
     //TODO: Validación de campos
-    if(Principal.isAnonymous(caller)){ return #err(#CallerAnnonymous)};
-    if(inBlackList(caller)){ return #err(#InBlackList)};
+    if(Principal.isAnonymous(caller) or inBlackList(caller)) { return (null, null)};
     switch(userIds.get(caller)){
       case null{
         let timestamp = Time.now() / 1_000_000_000: Int; //Timestamp in seconds
@@ -87,21 +86,21 @@ shared ({caller}) actor class ICPTutorials() = {
         };
         users.put(currentUserId,newMember);
         currentUserId += 1;
-        return #ok(newMember);
+        return (?newMember, ?(currentUserId-1));
       };
       case (?member){
-        return #err(#IsAlreadyAMember);
+        return (users.get(member), ?member);
       };
     };    
   };
   public shared ({caller}) func getMiId(): async ?Nat { userIds.get(caller) };
-  public shared ({caller}) func getMiUser(): async ?User { 
+  public shared ({caller}) func getMiUser(): async (?User, ?UserId) { 
     switch(userIds.get(caller)){
-      case null {return null};
+      case null {return (null, null)};
       case (?userId){
-        return users.get(userId);
-      }
-    } 
+        return (users.get(userId), ?userId);
+      };
+    };
   };
 
   public shared ({caller}) func userConfig(settings: UserSettings): async (){
