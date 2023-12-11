@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             //resetFront();
             connectButton.innerText = "Connect";
             document.getElementById("userNameLabel").innerText = "";
+            document.getElementById("userImageContainer").style.backgroundImage = "";
+
             login = false;
             cargarContenidoDinamico("./pages/home.html")
             return;
@@ -74,15 +76,87 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const contenidoDinamico = document.getElementById("content");
 
-    // const signUpSubmit = document.getElementById("signUpSubmit");
-    // signUpSubmit.onclick = async (e) => {
-    //     e.preventDefault();
-    // };
+    
 
-    function cargarPerfil(){
-        document.getElementById("userNameLabel").innerText = user.name + "#" + userId;
+    function cargarPerfil() {
+        let nameLabel = document.getElementById("userNameLabel")
+        nameLabel.innerText = user.name + "#" + userId;
 
+        if (user != undefined) {
+            if (user.avatar && user.avatar.length > 0) {
+                var userImageContainer = document.getElementById("userImageContainer");
+                var dataImg = "data:image/png;base64," + blobToBase64(user.avatar[0]);
+                console.log("arrayBufferToBase64(user.avatar)")
+                console.log(dataImg);
+                userImageContainer.style.backgroundImage =  "url('" + dataImg + "')";
+                
+                console.log()
+            
+            };
+        }
+
+        // Crear el input una vez al cargar el perfil
+        var input = document.createElement("input");
+        input.type = "file";
+        input.style.display = "none"; // Ocultar el input por defecto
+        input.addEventListener("change", function () {
+            var selectedFile = input.files[0];
+
+            // Crear un objeto FileReader para leer la imagen como una URL de datos
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                // Obtener la URL de datos de la imagen
+                var img = e.target.result;
+
+                // Convertir la URL de datos a un array de bytes (Uint8Array)
+                var byteArray = base64ToBlob(img);
+
+                // Obtener el contenedor de la imagen
+                var userImageContainer = document.getElementById("userImageContainer");
+
+                // Establecer la imagen seleccionada como fondo del div y enviar al backend
+                back.loadAvatar(byteArray);
+                userImageContainer.style.backgroundImage = "url('" + img + "')";
+            };
+            reader.readAsDataURL(selectedFile);
+        });
+
+        // Agregar el input al cuerpo del documento
+        document.body.appendChild(input);
+
+        // Agregar el event listener al nameLabel
+        nameLabel.addEventListener("click", function () {
+            // Hacer visible el input al hacer clic en el nameLabel
+            input.click();
+        });
     };
+
+    function base64ToBlob(dataUrl) {
+        // Extraer el contenido codificado en base64 de la URL de datos
+        var base64Content = dataUrl.split(',')[1];
+    
+        // Convertir el contenido base64 a un array de bytes (Uint8Array)
+        var byteCharacters = atob(base64Content);
+        var byteArray = new Uint8Array(byteCharacters.length);
+    
+        for (var i = 0; i < byteCharacters.length; i++) {
+            byteArray[i] = byteCharacters.charCodeAt(i);
+        }
+    
+        return byteArray;
+    }
+    
+
+    function blobToBase64(buffer) {
+        var binary = '';
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary);
+    }
+
 
     function cargarContenidoDinamico(url, callback) {
         var xhr = new XMLHttpRequest();
@@ -93,11 +167,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                     contenidoDinamico.innerHTML = xhr.responseText;
                     var contNuevo = contenidoDinamico.firstElementChild;
                     contNuevo.style.opacity = "0"; // Configurar el nuevo contenido con opacidad 0
-    
+
                     setTimeout(function () {
                         contNuevo.style.opacity = "1"; // Aplicar fade in al nuevo contenido
                     }, 10);
-    
+
                     // Llamar a la función de devolución de llamada solo después de cargar el contenido
                     if (callback) {
                         callback();

@@ -276,6 +276,8 @@ shared ({caller}) actor class ICPTutorials() = {
     Buffer.toArray<Publication>(tempBuffer);
   };
 
+  
+
 /*
   func inArray<T>(a: [T], e: T): Bool{
     for(elem in a.vals()){

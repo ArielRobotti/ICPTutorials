@@ -135,6 +135,23 @@ body {
 
 }
 
+#userNameLabel {
+    color: rgb(70, 139, 6);
+}
+
+#userNameLabel:hover {
+    color: rgb(123, 255, 0);
+}
+#userImageContainer{
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: block;
+}
+
+
 /* Estilos del contenido dinámico */
 #content {
     margin-top: 80px;
