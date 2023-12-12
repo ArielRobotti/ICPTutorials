@@ -311,19 +311,20 @@ shared ({caller}) actor class ICPTutorials() = {
               score = p.score + q;
             };
             aprovedPublications.put(pubId, pubUpdate);
+            let updateUser = {
+              name = user.name;
+              avatar = user.avatar;
+              birthdate = user.birthdate;
+              admissionDate = user.admissionDate;
+              country = user.country;
+              //account: Account;
+              sex = user.sex;
+              votedPosts = addToArray(user.votedPosts,pubId);
+            };
+            users.put(id, updateUser);
           };
         };
-        let updateUser = {
-          name = user.name;
-          avatar = user.avatar;
-          birthdate = user.birthdate;
-          admissionDate = user.admissionDate;
-          country = user.country;
-          //account: Account;
-          sex = user.sex;
-          votedPost = addToArray(user.votedPosts,pubId);
-        };
-        users.put(id, user);
+        
       };
       case _{ return}    
     };
@@ -331,3 +332,4 @@ shared ({caller}) actor class ICPTutorials() = {
 
 
 };
+
