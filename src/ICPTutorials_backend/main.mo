@@ -329,30 +329,5 @@ shared ({caller}) actor class ICPTutorials() = {
     };
   };
 
-  
-
-
-/*
-
-  func inArray<R>(a: [R], e: R): Bool{
-    for(elem in a.vals()){
-      if(elem == e){return true};
-    };
-    return false;
-  };
-
-
-  public shared ({caller}) func qualify(id: TutoId, q: Nat): async Bool{
-    switch(getUser(caller)){
-      case null {return false };
-      case(?user){
-        if(inArray<TutoId>(user.votedPosts, id)){
-          return false;
-        };
-
-      };
-    };
-  };
-  */
 
 };
