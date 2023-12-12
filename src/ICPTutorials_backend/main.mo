@@ -93,14 +93,17 @@ shared ({caller}) actor class ICPTutorials() = {
       };
     };    
   };
-  public shared ({caller}) func getMiId(): async ?Nat { userIds.get(caller) };
-  public shared ({caller}) func getMiUser(): async (?User, ?UserId) { 
+  func _getUser(p: Principal):(?User, ?UserId){
     switch(userIds.get(caller)){
       case null {return (null, null)};
       case (?userId){
         return (users.get(userId), ?userId);
       };
     };
+  };
+  public shared ({caller}) func getMiId(): async ?Nat { userIds.get(caller) };
+  public shared ({caller}) func getMiUser(): async (?User, ?UserId) { 
+    _getUser(caller);
   };
 
   public shared ({caller}) func userConfig(settings: UserSettings): async (){
@@ -181,7 +184,8 @@ shared ({caller}) actor class ICPTutorials() = {
           autor = userId;
           date;
           content;
-          score = null;
+          numVotes = 0;
+          score = 0;
         };
         incomingPublications.put(currentTutorialId, pub);
         currentTutorialId += 1;
@@ -276,15 +280,67 @@ shared ({caller}) actor class ICPTutorials() = {
     Buffer.toArray<Publication>(tempBuffer);
   };
 
+  func inArray<T>(a: [T], e: T, eq: (T,T) -> Bool): Bool{
+    for(i in a.vals()){
+      if(eq(i, e)) { return true };
+    };
+    return false;
+  };
+
+  func addToArray<T>(a: [T], e: T): [T]{
+    let tempBuffer = Buffer.fromArray<T>(a);
+    tempBuffer.add(e);
+    Buffer.toArray<T>(tempBuffer);
+  };
+
+
+
+  public shared ({caller}) func qualifyPost(pubId: TutoId, q: Nat): async (){
+    switch (_getUser(caller)){
+      case (null, null) { return };
+      case (?user, ?id){
+        if(inArray<Nat>(user.votedPosts, pubId, Nat.equal)) { return };
+        switch(await getPubByID(pubId)){
+          case null {return};
+          case(?p){
+            let pubUpdate ={
+              autor = p.autor;
+              date = p.date; //Timestamp
+              content = p.content;
+              numVotes = p.numVotes + 1;
+              score = p.score + q;
+            };
+            aprovedPublications.put(pubId, pubUpdate);
+          };
+        };
+        let updateUser = {
+          name = user.name;
+          avatar = user.avatar;
+          birthdate = user.birthdate;
+          admissionDate = user.admissionDate;
+          country = user.country;
+          //account: Account;
+          sex = user.sex;
+          votedPost = addToArray(user.votedPosts,pubId);
+        };
+        users.put(id, user);
+      };
+      case _{ return}    
+    };
+  };
+
   
 
+
 /*
-  func inArray<T>(a: [T], e: T): Bool{
+
+  func inArray<R>(a: [R], e: R): Bool{
     for(elem in a.vals()){
       if(elem == e){return true};
     };
     return false;
   };
+
 
   public shared ({caller}) func qualify(id: TutoId, q: Nat): async Bool{
     switch(getUser(caller)){

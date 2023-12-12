@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         // Crear el input una vez al cargar el perfil
-        var input = document.createElement("input");
+        var input = document.getElementById("loadAvatar")
         input.type = "file";
         input.style.display = "none"; // Ocultar el input por defecto
         input.addEventListener("change", function () {
@@ -121,32 +121,22 @@ document.addEventListener("DOMContentLoaded", async function () {
             reader.readAsDataURL(selectedFile);
         });
 
-        // Agregar el input al cuerpo del documento
-        document.body.appendChild(input);
-
         // Agregar el event listener al nameLabel
         nameLabel.addEventListener("click", function () {
-            // Hacer visible el input al hacer clic en el nameLabel
             input.click();
         });
     };
 
     function base64ToBlob(dataUrl) {
-        // Extraer el contenido codificado en base64 de la URL de datos
-        var base64Content = dataUrl.split(',')[1];
-    
-        // Convertir el contenido base64 a un array de bytes (Uint8Array)
-        var byteCharacters = atob(base64Content);
+        var base64Content = dataUrl.split(',')[1];  // Extraer el contenido codificado en base64 de la URL de datos
+        var byteCharacters = atob(base64Content);   // Convertir el contenido base64 a un array de bytes (Uint8Array)
         var byteArray = new Uint8Array(byteCharacters.length);
-    
         for (var i = 0; i < byteCharacters.length; i++) {
             byteArray[i] = byteCharacters.charCodeAt(i);
         }
-    
         return byteArray;
-    }
+    };
     
-
     function blobToBase64(buffer) {
         var binary = '';
         var bytes = new Uint8Array(buffer);
@@ -155,7 +145,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             binary += String.fromCharCode(bytes[i]);
         }
         return btoa(binary);
-    }
+    };
 
 
     function cargarContenidoDinamico(url, callback) {
@@ -182,7 +172,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         };
         xhr.send();
-    }
+    };
 
 
     function formOK(form) {

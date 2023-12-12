@@ -143,6 +143,7 @@ body {
     color: rgb(123, 255, 0);
 }
 #userImageContainer{
+    box-shadow: 10px 10px 40px #0f0;
     background-repeat: no-repeat;
     background-size: cover;
     width: 80px;
