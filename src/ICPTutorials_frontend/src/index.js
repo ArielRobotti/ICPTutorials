@@ -50,16 +50,21 @@ document.addEventListener("DOMContentLoaded", async function () {
             connectButton.innerText = "Disconnect";
             [[user], [userId]] = await back.getMiUser();
 
+            console.log(userId);
+            console.log(user);
+
             if (user == undefined) {
                 ocultarSpinner();
                 cargarContenidoDinamico("./pages/signUpForm.html", function () {
                     // Lógica específica después de cargar el formulario
                     document.getElementById("signUpForm").addEventListener("submit", async function (e) {
                         e.preventDefault();
+                        mostrarSpinner();
                         var name = document.getElementById("name").value;
                         var sex = document.getElementById("sex").value;
                         [[user], [userId]] = await back.signUp(name, sex);
                         cargarPerfil();
+                        ocultarSpinner();
                         cargarContenidoDinamico("./pages/home.html")
                     });
                 });
@@ -86,8 +91,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             if (user.avatar && user.avatar.length > 0) {
                 var userImageContainer = document.getElementById("userImageContainer");
                 var dataImg = "data:image/png;base64," + blobToBase64(user.avatar[0]);
-                console.log("arrayBufferToBase64(user.avatar)")
-                console.log(dataImg);
                 userImageContainer.style.backgroundImage =  "url('" + dataImg + "')";
                 
                 console.log()
@@ -100,7 +103,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         input.type = "file";
         input.style.display = "none"; // Ocultar el input por defecto
         input.addEventListener("change", function () {
-            var selectedFile = input.files[0];
+            var files = input.files;
+            var selectedFile = files[0];
+            console.log(files.length)
 
             // Crear un objeto FileReader para leer la imagen como una URL de datos
             var reader = new FileReader();
@@ -174,7 +179,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         xhr.send();
     };
 
-
     function formOK(form) {
         const campos = form.querySelectorAll("input[required]");
         for (const campo of campos) {
@@ -195,7 +199,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
         return true;
     };
-
 
     function mostrarSpinner() {
         const spinner = document.getElementById('loading-spinner');

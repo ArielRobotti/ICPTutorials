@@ -59,7 +59,13 @@ shared ({caller}) actor class ICPTutorials() = {
 
   public shared ({caller}) func addAdmin(p: Text): async Bool{
     assert(isAdmin(caller));
-    for(a in admins.vals()){ if(a == Principal.fromText(p)){ return true}};
+    assert(not inBlackList(Principal.fromText(p)));
+
+    for(a in admins.vals()){ 
+      if(a == Principal.fromText(p)){ 
+        return true;
+      };
+    };
     var tempBuffer = Buffer.fromArray<Principal>(admins);
     tempBuffer.add(Principal.fromText(p));
 
@@ -93,18 +99,19 @@ shared ({caller}) actor class ICPTutorials() = {
       };
     };    
   };
+
   func _getUser(p: Principal):(?User, ?UserId){
-    switch(userIds.get(caller)){
+    switch(userIds.get(p)){
       case null {return (null, null)};
       case (?userId){
         return (users.get(userId), ?userId);
       };
     };
   };
+
+  public shared ({caller}) func whoami(): async Text { Principal.toText(caller) };
   public shared ({caller}) func getMiId(): async ?Nat { userIds.get(caller) };
-  public shared ({caller}) func getMiUser(): async (?User, ?UserId) { 
-    _getUser(caller);
-  };
+  public shared ({caller}) func getMiUser(): async (?User, ?UserId) { _getUser(caller);};
 
   public shared ({caller}) func userConfig(settings: UserSettings): async (){
     
@@ -293,17 +300,16 @@ shared ({caller}) actor class ICPTutorials() = {
     Buffer.toArray<T>(tempBuffer);
   };
 
-
-
   public shared ({caller}) func qualifyPost(pubId: TutoId, q: Nat): async (){
     switch (_getUser(caller)){
       case (null, null) { return };
       case (?user, ?id){
         if(inArray<Nat>(user.votedPosts, pubId, Nat.equal)) { return };
+        if(1 > q and q > 5) {return };
         switch(await getPubByID(pubId)){
           case null {return};
           case(?p){
-            let pubUpdate ={
+            let pubUpdate = {
               autor = p.autor;
               date = p.date; //Timestamp
               content = p.content;
@@ -324,9 +330,8 @@ shared ({caller}) actor class ICPTutorials() = {
             users.put(id, updateUser);
           };
         };
-        
       };
-      case _{ return}    
+      case _{ return }    
     };
   };
 
